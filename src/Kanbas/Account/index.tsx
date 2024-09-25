@@ -1,17 +1,16 @@
 import { Routes, Route, Navigate } from "react-router";
-import AccountNavigation from "../Navigation";
 import Profile from "./Profile";
 import Signin from "./Signin";
 import Signup from "./Signup";
+import AccountNavigation from "./Navigation";
 export default function Account() {
   return (
     <div id="wd-account-screen">
       <table>
         <tr>
-          {/* <td valign="top">
+          <td valign="top">
             <AccountNavigation />
-          </td>  I am not sure if there should be 2 stacked navigation tabs in the Account tab.
-          Please note I would have simply uncommented if it was needed. Thanks!*/}
+          </td>
           <td valign="top">
             <Routes>
               <Route
