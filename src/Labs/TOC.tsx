@@ -17,6 +17,9 @@ export default function TOC() {
       <li>
         <Link to="/Kanbas">Kanbas</Link>
       </li>
+      <li>
+        <Link id="wd-github" to="/Kanbas">Github Repo</Link>
+      </li>
     </ul>
   );
 }

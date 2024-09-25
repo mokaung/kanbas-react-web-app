@@ -8,13 +8,16 @@ export default function Account() {
     <div id="wd-account-screen">
       <table>
         <tr>
-          <td valign="top">
+          {/* <td valign="top">
             <AccountNavigation />
-          </td>
+          </td>  I am not sure if there should be 2 stacked navigation tabs in the Account tab.
+          Please note I would have simply uncommented if it was needed. Thanks!*/}
           <td valign="top">
             <Routes>
-              <Route path="/"
-                     element={<Navigate to="/Kanbas/Account/Signin" />} />
+              <Route
+                path="/"
+                element={<Navigate to="/Kanbas/Account/Signin" />}
+              />
               <Route path="/Signin" element={<Signin />} />
               <Route path="/Profile" element={<Profile />} />
               <Route path="/Signup" element={<Signup />} />
@@ -23,4 +26,5 @@ export default function Account() {
         </tr>
       </table>
     </div>
-);}
+  );
+}

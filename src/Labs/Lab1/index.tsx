@@ -177,7 +177,7 @@ export default function Lab1() {
           <br />
           <img
             id="wd-teslabot"
-            src="/Users/kmo/Documents/teslabot.jpg"
+            src="/images/teslabot.jpg"
             height="200px"
           />
         </div>
