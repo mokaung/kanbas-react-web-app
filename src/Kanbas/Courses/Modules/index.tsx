@@ -1,62 +1,62 @@
+import ModulesControls from "./ModulesControls";
+import LessonControlButtons from "./LessonControlButtons";
+import ModuleControlButtons from "./ModuleControlButtons";
+import { BsGripVertical } from "react-icons/bs";
+
 export default function Modules() {
   return (
     <div>
-      <button>Collapse All</button> <button>View Progress</button>&nbsp;
-      <select id="wd-select-publishing">
-        <option selected value="Publish All">
-          Publish All
-        </option>
-        <option value="Unpublish All">Unpublish All</option>
-      </select>
-      &nbsp;
-      <button>+ Module</button>
+      <ModulesControls />
       <br />
       <br />
-      <ul id="wd-modules">
-        <li className="wd-module">
-          <div className="wd-title">Week 1</div>
-          <ul className="wd-lessons">
-            <li className="wd-lesson">
-              <span className="wd-title">LEARNING OBJECTIVES</span>
-              <ul className="wd-content">
-                <li className="wd-content-item">Introduction to the course</li>
-                <li className="wd-content-item">Learn what is Airbending</li>
-              </ul>
-              <span className="wd-title">READING</span>
-              <ul className="wd-content">
-                <li className="wd-content-item">
-                  Lore of Avatar - Book 1 - The first Avatar
-                </li>
-                <li className="wd-content-item">
-                  Lore of Avatar - Book 2 - Avatar Kyoshi
-                </li>
-              </ul>
-              <span className="wd-title">SLIDES</span>
-              <ul className="wd-content">
-                <li className="wd-content-item">Introduction to the course</li>
-                <li className="wd-content-item">
-                  Prepare your mind for Airbending
-                </li>
-                <li className="wd-content-item">
-                  Gathering your first gusts of wind
-                </li>
-              </ul>
+      <br />
+      <br />
+      <ul id="wd-modules" className="list-group rounded-0">
+        <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
+          <div className="wd-title p-3 ps-2 bg-secondary">
+            <BsGripVertical className="me-2 fs-3" /> Week 1{" "}
+            <ModuleControlButtons />
+          </div>
+          <ul className="wd-lessons list-group rounded-0">
+            <li className="wd-lesson list-group-item p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" />
+              LEARNING OBJECTIVES <LessonControlButtons />
+            </li>
+            <li className="wd-lesson list-group-item p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" />
+              Where did Airbending Originate? <LessonControlButtons />
+            </li>
+            <li className="wd-lesson list-group-item p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" />
+              Era of Raava <LessonControlButtons />
+            </li>
+            <li className="wd-lesson list-group-item p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" /> Air Ball{" "}
+              <LessonControlButtons />
+            </li>
+            <li className="wd-lesson list-group-item p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" /> Air Blast{" "}
+              <LessonControlButtons />
             </li>
           </ul>
         </li>
-        <li className="wd-module">
-          <div className="wd-title">Week 2</div>
-          <ul className="wd-lessons">
-            <li className="wd-lesson">
-              <span className="wd-title">LEARNING OBJECTIVES</span>
-              <ul className="wd-content">
-                <li className="wd-content-item">
-                  Flowing air into specific shapes
-                </li>
-                <li className="wd-content-item">
-                  How to change the air temp around you
-                </li>
-              </ul>
+        <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
+          <div className="wd-title p-3 ps-2 bg-secondary">
+            <BsGripVertical className="me-2 fs-3" /> Week 2{" "}
+            <ModuleControlButtons />
+          </div>
+          <ul className="wd-lessons list-group rounded-0">
+            <li className="wd-lesson list-group-item p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" />
+              LEARNING OBJECTIVES <LessonControlButtons />
+            </li>
+            <li className="wd-lesson list-group-item p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" />
+              Air Manipulation <LessonControlButtons />
+            </li>
+            <li className="wd-lesson list-group-item p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" /> Air Punch{" "}
+              <LessonControlButtons />
             </li>
           </ul>
         </li>
