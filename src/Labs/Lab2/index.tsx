@@ -1,3 +1,24 @@
+import "./index.css";
+import ForegroundColors from "./ForegroundColors";
+import BackgroundColors from "./BackgroundColors";
+import Borders from "./Borders";
+import Padding from "./Padding";
+import Margins from "./Margins";
+import Corners from "./Corners";
+import Dimensions from "./Dimensions";
+import Positions from "./Positions";
+import Zindex from "./Zindex";
+import Float from "./Float";
+import GridLayout from "./GridLayout";
+import Flex from "./Flex";
+import ReactIconsSampler from "./ReactIcons";
+import BootstrapGrids from "./BootstrapGrids";
+import ScreenSizeLabel from "./ScreenSizeLabel";
+import BootstrapTables from "./BootstrapTables";
+import BootstrapLists from "./BootstrapLists";
+import BootstrapForms from "./BootstrapForms";
+import BootstrapNavigation from "./BootstrapNavigation";
+
 export default function Lab2() {
   return (
     <div className="container" id="wd-lab2">
@@ -109,18 +130,6 @@ export default function Lab2() {
       <div className="bootstrap-navigation">
         <BootstrapNavigation />
       </div>
-      <div className="stuff">
-  <ul>
-    <li>List item 1</li>
-    <li>List item 2</li>
-    <li>List item 3</li>
-  </ul>
-</div>
-      <div className="red">
-  <h1 id="green">Hello</h1>
-</div>
-
-<h1 id="blue">Hello</h1>
     </div>
   );
 }

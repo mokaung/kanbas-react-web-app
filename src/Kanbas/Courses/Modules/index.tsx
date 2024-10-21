@@ -9,15 +9,9 @@ export default function Modules() {
   const modules = db.modules;
   return (
     <div>
-      <button>Collapse All</button> <button>View Progress</button>&nbsp;
-      <select id="wd-select-publishing">
-        <option selected value="Publish All">
-          Publish All
-        </option>
-        <option value="Unpublish All">Unpublish All</option>
-      </select>
-      &nbsp;
-      <button>+ Module</button>
+      <ModulesControls />
+      <br />
+      <br />
       <br />
       <br />
       <br />

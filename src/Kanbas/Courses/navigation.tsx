@@ -30,4 +30,5 @@ export default function CoursesNavigation() {
         </Link>
       ))}
     </div>
-);}
+  );
+}
