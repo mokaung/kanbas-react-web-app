@@ -1,4 +1,12 @@
+import { useParams } from "react-router";
+import * as db from "../../Database";
+import ModulesControls from "./ModulesControls";
+import { BsGripVertical } from "react-icons/bs";
+import ModuleControlButtons from "./ModuleControlButtons";
+import LessonControlButtons from "./LessonControlButtons";
 export default function Modules() {
+  const { cid } = useParams();
+  const modules = db.modules;
   return (
     <div>
       <button>Collapse All</button> <button>View Progress</button>&nbsp;
@@ -12,55 +20,29 @@ export default function Modules() {
       <button>+ Module</button>
       <br />
       <br />
-      <ul id="wd-modules">
-        <li className="wd-module">
-          <div className="wd-title">Week 1</div>
-          <ul className="wd-lessons">
-            <li className="wd-lesson">
-              <span className="wd-title">LEARNING OBJECTIVES</span>
-              <ul className="wd-content">
-                <li className="wd-content-item">Introduction to the course</li>
-                <li className="wd-content-item">Learn what is Airbending</li>
+      <br />
+      <br />
+      <ul id="wd-modules" className="list-group rounded-0">
+        {modules
+          .filter((module: any) => module.course === cid)
+          .map((module: any) => (
+          <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
+            <div className="wd-title p-3 ps-2 bg-secondary">
+              <BsGripVertical className="me-2 fs-3" /> {module.name} <ModuleControlButtons />
+            </div>
+            {module.lessons && (
+              <ul className="wd-lessons list-group rounded-0">
+                {module.lessons.map((lesson: any) => (
+                  <li className="wd-lesson list-group-item p-3 ps-1">
+                    <BsGripVertical className="me-2 fs-3" /> {lesson.name} <LessonControlButtons />
+                  </li>
+                ))}
               </ul>
-              <span className="wd-title">READING</span>
-              <ul className="wd-content">
-                <li className="wd-content-item">
-                  Lore of Avatar - Book 1 - The first Avatar
-                </li>
-                <li className="wd-content-item">
-                  Lore of Avatar - Book 2 - Avatar Kyoshi
-                </li>
-              </ul>
-              <span className="wd-title">SLIDES</span>
-              <ul className="wd-content">
-                <li className="wd-content-item">Introduction to the course</li>
-                <li className="wd-content-item">
-                  Prepare your mind for Airbending
-                </li>
-                <li className="wd-content-item">
-                  Gathering your first gusts of wind
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li className="wd-module">
-          <div className="wd-title">Week 2</div>
-          <ul className="wd-lessons">
-            <li className="wd-lesson">
-              <span className="wd-title">LEARNING OBJECTIVES</span>
-              <ul className="wd-content">
-                <li className="wd-content-item">
-                  Flowing air into specific shapes
-                </li>
-                <li className="wd-content-item">
-                  How to change the air temp around you
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
+            )}
+          </li>
+        ))}
       </ul>
+
     </div>
   );
 }
