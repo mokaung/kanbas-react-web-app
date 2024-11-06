@@ -1,10 +1,21 @@
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
 import { TiCancel } from "react-icons/ti";
+import ModuleEditor from "./ModuleEditor";
+import FacultyProtection from "../../Account/FacultyProtection";
 
-export default function ModulesControls() {
+export default function ModulesControls({
+  moduleName,
+  setModuleName,
+  addModule,
+}: {
+  moduleName: string;
+  setModuleName: (title: string) => void;
+  addModule: () => void;
+}) {
   return (
     <div id="wd-modules-controls" className="text-nowrap">
+      <FacultyProtection>
       <button
         id="wd-add-module-btn"
         className="btn btn-lg btn-danger me-1 float-end"
@@ -12,70 +23,73 @@ export default function ModulesControls() {
         <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
         Module
       </button>
-      <div className="dropdown d-inline me-1 float-end">
-        <button
-          id="wd-publish-all-btn"
-          className="btn btn-lg btn-secondary dropdown-toggle"
-          type="button"
-          data-bs-toggle="dropdown"
-        >
-          <GreenCheckmark />
-          Publish All
-        </button>
+      </FacultyProtection>
+      <FacultyProtection>
+        <div className="dropdown d-inline me-1 float-end">
+          <button
+            id="wd-publish-all-btn"
+            className="btn btn-lg btn-secondary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            <GreenCheckmark />
+            Publish All
+          </button>
+          <ul className="dropdown-menu">
+            <li>
+              <a
+                id="wd-publish-all-modules-and-items-btn"
+                className="dropdown-item"
+                href="#"
+              >
+                <GreenCheckmark />
+                Publish all modules and items
+              </a>
+            </li>
+            <li>
+              <a
+                id="wd-publish-modules-only-button"
+                className="dropdown-item"
+                href="#"
+              >
+                <GreenCheckmark />
+                Publish modules only
+              </a>
+            </li>
+            <li>
+              <a
+                id="wd-unpublish-all-modules-and-items"
+                className="dropdown-item"
+                href="#"
+              >
+                <span className="me-1 position-relative">
+                  <TiCancel
+                    style={{ top: "2px" }}
+                    className="text-start me-1 fs-3"
+                  />
+                </span>
+                Unpublish all modules and items
+              </a>
+            </li>
+            <li>
+              <a
+                id="wd-unpublish-modules-only"
+                className="dropdown-item"
+                href="#"
+              >
+                <span className="me-1 position-relative">
+                  <TiCancel
+                    style={{ top: "2px" }}
+                    className="text-start me-1 fs-3"
+                  />
+                </span>
+                Unpublish modules only
+              </a>
+            </li>
+          </ul>
+        </div>
+      </FacultyProtection>
 
-        <ul className="dropdown-menu">
-          <li>
-            <a
-              id="wd-publish-all-modules-and-items-btn"
-              className="dropdown-item"
-              href="#"
-            >
-              <GreenCheckmark />
-              Publish all modules and items
-            </a>
-          </li>
-          <li>
-            <a
-              id="wd-publish-modules-only-button"
-              className="dropdown-item"
-              href="#"
-            >
-              <GreenCheckmark />
-              Publish modules only
-            </a>
-          </li>
-          <li>
-            <a
-              id="wd-unpublish-all-modules-and-items"
-              className="dropdown-item"
-              href="#"
-            >
-              <span className="me-1 position-relative">
-                <TiCancel
-                  style={{ top: "2px" }}
-                  className="text-start me-1 fs-3"
-                />
-              </span>
-              Unpublish all modules and items
-            </a>
-          </li>
-          <li>
-            <a
-              id="wd-unpublish-modules-only"
-              className="dropdown-item"
-              href="#"
-            >
-              <span className="me-1 position-relative">
-                <TiCancel
-                  style={{ top: "2px" }}
-                  className="text-start me-1 fs-3"
-                />
-              </span>
-              Unpublish modules only
-            </a>
-          </li>
-        </ul>
-      </div>
       <button
         id="wd-view-progress"
         className="btn btn-lg btn-secondary me-1 float-end"
@@ -88,6 +102,12 @@ export default function ModulesControls() {
       >
         Collapse All
       </button>
+      <ModuleEditor
+        dialogTitle="Add Module"
+        moduleName={moduleName}
+        setModuleName={setModuleName}
+        addModule={addModule}
+      />
     </div>
   );
 }

@@ -1,39 +1,45 @@
-import { useParams } from "react-router";
-import * as db from "../../Database";
-import { Link } from "react-router-dom";
+
+
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { addAssignment, updateAssignment } from "./reducer";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
-  const assignments = db.assignments;
-  let assignment = assignments.find((a) => a._id === aid);
-  //if the assignment doesn't exist, as in the user wants to create a new assigment, give default
-  if (!assignment) {
-    assignment = {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const assignments = useSelector(
+    (state: any) => state.assignmentsReducer.assignments
+  );
+
+  const existingAssignment = assignments.find((a: any) => a._id === aid);
+
+  const [assignment, setAssignment] = useState(
+    existingAssignment || {
       _id: aid || "TBD",
       course: cid || "TBD",
-      title: "Enter a Title!",
-      points: "100",
+      title: "",
+      points: 100,
+      group: "ASSIGNMENTS",
+      displayGradeAs: "Percentage",
+      submissionType: "Online",
+      onlineEntryOptions: {
+        textEntry: false,
+        websiteURL: false,
+        mediaRecordings: false,
+        studentAnnotation: false,
+        fileUpload: false,
+      },
+      assignTo: "Everyone",
       availyear: "2000",
       availmonth: "01",
       availday: "01",
       dueyear: "2000",
       duemonth: "01",
       dueday: "01",
-    };
-  }
-
-  // used online resources to learn how to convert string to date for html calendar
-  const availableFrom = `${
-    assignment.availyear
-  }-${assignment.availmonth.padStart(2, "0")}-${assignment.availday.padStart(
-    2,
-    "0"
-  )}`;
-
-  const dueDate = `${assignment.dueyear}-${assignment.duemonth.padStart(
-    2,
-    "0"
-  )}-${assignment.dueday.padStart(2, "0")}`;
+    }
+  );
 
   return (
     <div id="wd-assignments-editor" className="container mt-4">
@@ -46,14 +52,17 @@ export default function AssignmentEditor() {
           id="wd-name"
           value={assignment.title}
           className="form-control"
+          onChange={(e) =>
+            setAssignment({ ...assignment, title: e.target.value })
+          }
         />
       </div>
       <div className="mb-4 float-end" style={{ width: "80%" }}>
         <textarea
-          id="wd-name"
-          value={"write a description..."}
+          id="wd-description"
           className="form-control"
           style={{ height: "200px" }}
+          placeholder="Write a description..."
         />
       </div>
       <div className="row float-end" style={{ width: "80%" }}>
@@ -73,6 +82,12 @@ export default function AssignmentEditor() {
                 className="form-control"
                 style={{ width: "70%" }}
                 value={assignment.points}
+                onChange={(e) =>
+                  setAssignment({
+                    ...assignment,
+                    points: Number(e.target.value),
+                  })
+                }
               />
             </div>
             <div className="d-flex mb-3 w-100">
@@ -87,6 +102,10 @@ export default function AssignmentEditor() {
                 id="wd-group"
                 className="form-select"
                 style={{ width: "70%" }}
+                value={assignment.group}
+                onChange={(e) =>
+                  setAssignment({ ...assignment, group: e.target.value })
+                }
               >
                 <option value="ASSIGNMENTS">ASSIGNMENTS</option>
                 <option value="QUIZZES">QUIZZES</option>
@@ -105,6 +124,13 @@ export default function AssignmentEditor() {
                 id="wd-display-grade-as"
                 className="form-select"
                 style={{ width: "70%" }}
+                value={assignment.displayGradeAs}
+                onChange={(e) =>
+                  setAssignment({
+                    ...assignment,
+                    displayGradeAs: e.target.value,
+                  })
+                }
               >
                 <option value="Percentage">Percentage</option>
                 <option value="Points">Points</option>
@@ -121,7 +147,17 @@ export default function AssignmentEditor() {
               </label>
               <div className="border p-3 mb-3" style={{ width: "70%" }}>
                 <div className="d-flex mb-3">
-                  <select id="wd-submission-type" className="form-select mb-2">
+                  <select
+                    id="wd-submission-type"
+                    className="form-select mb-2"
+                    value={assignment.submissionType}
+                    onChange={(e) =>
+                      setAssignment({
+                        ...assignment,
+                        submissionType: e.target.value,
+                      })
+                    }
+                  >
                     <option value="Online">Online</option>
                     <option value="In Person">In Person</option>
                     <option value="Asynchronous">Asynchronous</option>
@@ -136,6 +172,16 @@ export default function AssignmentEditor() {
                       className="form-check-input"
                       type="checkbox"
                       id="wd-text-entry"
+                      checked={assignment.onlineEntryOptions.textEntry}
+                      onChange={(e) =>
+                        setAssignment({
+                          ...assignment,
+                          onlineEntryOptions: {
+                            ...assignment.onlineEntryOptions,
+                            textEntry: e.target.checked,
+                          },
+                        })
+                      }
                     />
                     <label className="form-check-label" htmlFor="wd-text-entry">
                       Text Entry
@@ -146,6 +192,16 @@ export default function AssignmentEditor() {
                       className="form-check-input"
                       type="checkbox"
                       id="wd-website-url"
+                      checked={assignment.onlineEntryOptions.websiteURL}
+                      onChange={(e) =>
+                        setAssignment({
+                          ...assignment,
+                          onlineEntryOptions: {
+                            ...assignment.onlineEntryOptions,
+                            websiteURL: e.target.checked,
+                          },
+                        })
+                      }
                     />
                     <label
                       className="form-check-label"
@@ -159,6 +215,16 @@ export default function AssignmentEditor() {
                       className="form-check-input"
                       type="checkbox"
                       id="wd-media-recordings"
+                      checked={assignment.onlineEntryOptions.mediaRecordings}
+                      onChange={(e) =>
+                        setAssignment({
+                          ...assignment,
+                          onlineEntryOptions: {
+                            ...assignment.onlineEntryOptions,
+                            mediaRecordings: e.target.checked,
+                          },
+                        })
+                      }
                     />
                     <label
                       className="form-check-label"
@@ -172,6 +238,16 @@ export default function AssignmentEditor() {
                       className="form-check-input"
                       type="checkbox"
                       id="wd-student-annotation"
+                      checked={assignment.onlineEntryOptions.studentAnnotation}
+                      onChange={(e) =>
+                        setAssignment({
+                          ...assignment,
+                          onlineEntryOptions: {
+                            ...assignment.onlineEntryOptions,
+                            studentAnnotation: e.target.checked,
+                          },
+                        })
+                      }
                     />
                     <label
                       className="form-check-label"
@@ -185,6 +261,16 @@ export default function AssignmentEditor() {
                       className="form-check-input"
                       type="checkbox"
                       id="wd-file-upload"
+                      checked={assignment.onlineEntryOptions.fileUpload}
+                      onChange={(e) =>
+                        setAssignment({
+                          ...assignment,
+                          onlineEntryOptions: {
+                            ...assignment.onlineEntryOptions,
+                            fileUpload: e.target.checked,
+                          },
+                        })
+                      }
                     />
                     <label
                       className="form-check-label"
@@ -213,7 +299,11 @@ export default function AssignmentEditor() {
                     type="text"
                     id="wd-assign-to"
                     className="form-control"
-                    value="Everyone"
+                    style={{ width: "70%" }}
+                    value={assignment.assignTo}
+                    onChange={(e) =>
+                      setAssignment({ ...assignment, assignTo: e.target.value })
+                    }
                   />
                 </div>
                 <label htmlFor="wd-due-date" className="form-label fw-bold">
@@ -224,7 +314,22 @@ export default function AssignmentEditor() {
                     type="date"
                     id="wd-due-date"
                     className="form-control"
-                    value={dueDate}
+                    style={{ width: "70%" }}
+                    value={`${
+                      assignment.dueyear
+                    }-${assignment.duemonth.padStart(
+                      2,
+                      "0"
+                    )}-${assignment.dueday.padStart(2, "0")}`}
+                    onChange={(e) => {
+                      const [year, month, day] = e.target.value.split("-");
+                      setAssignment({
+                        ...assignment,
+                        dueyear: year,
+                        duemonth: month,
+                        dueday: day,
+                      });
+                    }}
                   />
                 </div>
                 <div className="row">
@@ -239,7 +344,21 @@ export default function AssignmentEditor() {
                       type="date"
                       id="wd-available-from"
                       className="form-control"
-                      value={availableFrom}
+                      value={`${
+                        assignment.availyear
+                      }-${assignment.availmonth.padStart(
+                        2,
+                        "0"
+                      )}-${assignment.availday.padStart(2, "0")}`}
+                      onChange={(e) => {
+                        const [year, month, day] = e.target.value.split("-");
+                        setAssignment({
+                          ...assignment,
+                          availyear: year,
+                          availmonth: month,
+                          availday: day,
+                        });
+                      }}
                     />
                   </div>
                   <div className="col">
@@ -253,6 +372,21 @@ export default function AssignmentEditor() {
                       type="date"
                       id="wd-available-until"
                       className="form-control"
+                      value={`${
+                        assignment.dueyear
+                      }-${assignment.duemonth.padStart(
+                        2,
+                        "0"
+                      )}-${assignment.dueday.padStart(2, "0")}`}
+                      onChange={(e) => {
+                        const [year, month, day] = e.target.value.split("-");
+                        setAssignment({
+                          ...assignment,
+                          dueyear: year,
+                          duemonth: month,
+                          dueday: day,
+                        });
+                      }}
                     />
                   </div>
                 </div>
@@ -262,20 +396,26 @@ export default function AssignmentEditor() {
         </div>
       </div>
       <hr className="float-end" style={{ width: "80%", marginTop: "30px" }} />
-      <div className="text-end float-end " style={{ width: "80%" }}>
-      <Link
-          to={`/Kanbas/Courses/${cid}/Assignments`}
+      <div className="text-end float-end" style={{ width: "80%" }}>
+        <button
+          onClick={() => navigate(`/Kanbas/Courses/${cid}/Assignments`)}
           className="btn btn-outline-secondary me-2"
         >
           Cancel
-        </Link>
-        <Link
-          to={`/Kanbas/Courses/${cid}/Assignments`}
+        </button>
+        <button
+          onClick={() => {
+            if (existingAssignment) {
+              dispatch(updateAssignment(assignment));
+            } else {
+              dispatch(addAssignment(assignment));
+            }
+            navigate(`/Kanbas/Courses/${cid}/Assignments`);
+          }}
           className="btn btn-danger"
-          id="wd-save-create"
         >
           Save
-        </Link>
+        </button>
       </div>
     </div>
   );

@@ -1,16 +1,23 @@
 import { BsGripVertical } from "react-icons/bs";
 import { IoEllipsisVertical } from "react-icons/io5";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import * as db from "../../Database";
 import GreenCheckmark from "../Modules/GreenCheckmark";
 import AssignmentsControls from "./AssignmentControls";
 import { BsChevronDown } from "react-icons/bs";
 import { PiNotebookDuotone } from "react-icons/pi";
 import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { deleteAssignment } from "./reducer";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
+  const assignments = useSelector(
+    (state: any) => state.assignmentsReducer.assignments
+  );
+  const [deleteDialogId, setDeleteDialogId] = useState(null);
+  const dispatch = useDispatch();
   return (
     <div>
       <AssignmentsControls />
@@ -109,6 +116,61 @@ export default function Assignments() {
                     </div>
                     <div className="text-end">
                       <GreenCheckmark />
+                      <>
+                        <FaTrash
+                          className="text-danger ms-4 fs-4"
+                          onClick={() => setDeleteDialogId(assignment._id)}
+                        />
+
+                        {deleteDialogId === assignment._id && (
+                          <div
+                            id="delete-confirmation-dialog"
+                            className="modal fade show"
+                            style={{ display: "block" }}
+                            data-bs-backdrop="static"
+                            data-bs-keyboard="false"
+                          >
+                            <div className="modal-dialog">
+                              <div className="modal-content">
+                                <div className="modal-header">
+                                  <h1 className="modal-title fs-5">
+                                    Confirm Deletion
+                                  </h1>
+                                  <button
+                                    type="button"
+                                    className="btn-close"
+                                    onClick={() => setDeleteDialogId(null)}
+                                    aria-label="Close"
+                                  ></button>
+                                </div>
+                                <div className="modal-body">
+                                  Are you sure you want to delete this
+                                  assignment?
+                                </div>
+                                <div className="modal-footer">
+                                  <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={() => setDeleteDialogId(null)}
+                                  >
+                                    Cancel
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={() => {
+                                      dispatch(deleteAssignment(assignment._id));
+                                      setDeleteDialogId(null);
+                                    }}
+                                  >
+                                    Confirm
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </>
                       <IoEllipsisVertical className=" ms-4 fs-4" />
                     </div>
                   </div>

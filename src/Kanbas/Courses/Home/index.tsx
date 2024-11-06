@@ -1,3 +1,4 @@
+import FacultyProtection from "../../Account/FacultyProtection";
 import Modules from "../Modules";
 import CourseStatus from "./Status";
 export default function Home() {
@@ -6,9 +7,11 @@ export default function Home() {
       <div className="flex-fill">
         <Modules />
       </div>
+
       <div className="d-none d-md-block ms-5">
         <CourseStatus />
       </div>
+
     </div>
   );
 }

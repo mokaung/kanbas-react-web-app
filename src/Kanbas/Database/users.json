@@ -1,4 +1,18 @@
 [
+  {
+    "_id": "999",
+    "username": "sanguinius",
+    "password": "bloodangels",
+    "firstName": "Sanguinius",
+    "lastName": "The Angel",
+    "email": "san@guinius.com",
+    "dob": "30000-05-29T00:00:00.000Z",
+    "role": "FACULTY",
+    "loginId": "001234301S",
+    "section": "S101",
+    "lastActivity": "2020-10-24",
+    "totalActivity": "15:21:47"
+  },
     {
       "_id": "123",
       "username": "iron_man",
