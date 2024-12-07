@@ -22,8 +22,30 @@ export default function Dashboard({
   updateCourse: () => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const [currentCourses, setCourses] = useState<any[]>([]);
+  const [enrollments, setEnrollments] = useState<any[]>([]);
+
   const [viewAllCourses, setViewAllCourses] = useState(false);
   const dispatch = useDispatch();
+
+  const fetchCourses = async () => {
+    if (viewAllCourses) {
+      const allCourses = await coursesClient.fetchAllCourses();
+      setCourses(allCourses);
+    } else {
+      const enrolledCourses = await enrollmentsClient.fetchEnrolledCourses(
+        currentUser._id
+      );
+      setCourses(enrolledCourses);
+    }
+  };
+
+  const fetchEnrollments = async () => {
+    const userEnrollments = await enrollmentsClient.fetchEnrollmentsForUser(
+      currentUser._id
+    );
+    setEnrollments(userEnrollments);
+  };
 
   const enrollInCourse = async (userId: string, courseId: string) => {
     const newEnrollment = await enrollmentsClient.enrollUserInCourse(
@@ -31,33 +53,20 @@ export default function Dashboard({
       courseId
     );
     dispatch(enroll(newEnrollment));
+    fetchEnrollments();
+    fetchCourses();
   };
   const unenrollFromCourse = async (userId: string, courseId: string) => {
-    await enrollmentsClient.unenrollUserFromCourse(
-      userId,
-      courseId)
+    await enrollmentsClient.unenrollUserFromCourse(userId, courseId);
     dispatch(unenroll({ userId, courseId }));
+    fetchEnrollments();
+    fetchCourses();
   };
 
-  // const fetchCourses = async () => {
-  //   try {
-  //     if (viewAllCourses) {
-  //       const allCourses = await coursesClient.fetchAllCourses();
-  //       setCourses(allCourses);
-  //     } else {
-  //       const enrolledCourses = await enrollmentsClient.fetchEnrolledCourses(
-  //         currentUser._id
-  //       );
-  //       setCourses(enrolledCourses);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching courses:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchCourses();
-  // }, [viewAllCourses]);
+  useEffect(() => {
+    fetchCourses();
+    fetchEnrollments();
+  }, [viewAllCourses]);
 
   return (
     <div id="wd-dashboard">
@@ -99,16 +108,21 @@ export default function Dashboard({
       <StudentProtection>
         <button
           className="btn btn-primary float-end"
-          onClick={() => setViewAllCourses(!viewAllCourses)}
+          onClick={() => {
+            setViewAllCourses(!viewAllCourses);
+            fetchCourses();
+          }}
         >
           {viewAllCourses ? "My Enrollments" : "All Courses"}
         </button>
       </StudentProtection>
-      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>{" "}
+      <h2 id="wd-dashboard-published">
+        Published Courses ({currentCourses.length})
+      </h2>{" "}
       <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {courses.map((course) => {
+          {currentCourses.map((course) => {
             return (
               <div
                 className="wd-dashboard-course col"
@@ -154,19 +168,31 @@ export default function Dashboard({
                         </button>
                       </FacultyProtection>
                       <StudentProtection>
-                        <button
-                          className={`btn float-end`}
-                          onClick={(event) => {
-                            event.preventDefault();
-
-                            dispatch(
-                              enroll({
-                                userId: currentUser._id,
-                                courseId: course._id,
-                              })
-                            );
-                          }}
-                        ></button>
+                        {enrollments.some(
+                          (enrollment) =>
+                            enrollment.user === currentUser._id &&
+                            enrollment.course === course._id
+                        ) ? (
+                          <button
+                            className="btn btn-danger float-end"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              unenrollFromCourse(currentUser._id, course._id);
+                            }}
+                          >
+                            Unenroll
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-success float-end"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              enrollInCourse(currentUser._id, course._id);
+                            }}
+                          >
+                            Enroll
+                          </button>
+                        )}
                       </StudentProtection>
                     </div>
                   </Link>
@@ -179,4 +205,3 @@ export default function Dashboard({
     </div>
   );
 }
-
