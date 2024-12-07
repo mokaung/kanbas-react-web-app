@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FacultyProtection from "../Account/FacultyProtection";
 import StudentProtection from "../Account/StudentProtection";
 import { enroll, unenroll } from "./reducer";
+import * as enrollmentsClient from "./client";
+import * as coursesClient from "../Courses/client";
 export default function Dashboard({
   courses,
   course,
@@ -22,6 +24,41 @@ export default function Dashboard({
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [viewAllCourses, setViewAllCourses] = useState(false);
   const dispatch = useDispatch();
+
+  const enrollInCourse = async (userId: string, courseId: string) => {
+    const newEnrollment = await enrollmentsClient.enrollUserInCourse(
+      userId,
+      courseId
+    );
+    dispatch(enroll(newEnrollment));
+  };
+  const unenrollFromCourse = async (userId: string, courseId: string) => {
+    await enrollmentsClient.unenrollUserFromCourse(
+      userId,
+      courseId)
+    dispatch(unenroll({ userId, courseId }));
+  };
+
+  // const fetchCourses = async () => {
+  //   try {
+  //     if (viewAllCourses) {
+  //       const allCourses = await coursesClient.fetchAllCourses();
+  //       setCourses(allCourses);
+  //     } else {
+  //       const enrolledCourses = await enrollmentsClient.fetchEnrolledCourses(
+  //         currentUser._id
+  //       );
+  //       setCourses(enrolledCourses);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching courses:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchCourses();
+  // }, [viewAllCourses]);
+
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
@@ -142,3 +179,4 @@ export default function Dashboard({
     </div>
   );
 }
+

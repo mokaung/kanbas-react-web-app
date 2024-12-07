@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { addAssignment, updateAssignment } from "./reducer";
+import * as assignmentsClient from "./client";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
@@ -40,6 +41,17 @@ export default function AssignmentEditor() {
       dueday: "01",
     }
   );
+
+  const saveAssignment = async (assignment: any) => {
+    await assignmentsClient.updateAssignment(assignment);
+    dispatch(updateAssignment(assignment));
+  };
+
+  const createAssignmentForCourse = async () => {
+    if (!cid) return;
+    const newAssignment = await assignmentsClient.createAssignment(cid, assignment);
+    dispatch(addAssignment(newAssignment));
+  };
 
   return (
     <div id="wd-assignments-editor" className="container mt-4">
@@ -404,13 +416,13 @@ export default function AssignmentEditor() {
           Cancel
         </button>
         <button
-          onClick={() => {
-            if (existingAssignment) {
-              dispatch(updateAssignment(assignment));
-            } else {
-              dispatch(addAssignment(assignment));
-            }
-            navigate(`/Kanbas/Courses/${cid}/Assignments`);
+          onClick={async () => {
+              if (existingAssignment) {
+                await saveAssignment(assignment); 
+              } else {
+                await createAssignmentForCourse();
+              }
+              navigate(`/Kanbas/Courses/${cid}/Assignments`);
           }}
           className="btn btn-danger"
         >

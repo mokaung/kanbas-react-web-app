@@ -8,8 +8,9 @@ import { BsChevronDown } from "react-icons/bs";
 import { PiNotebookDuotone } from "react-icons/pi";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { deleteAssignment } from "./reducer";
+import {useEffect,useState } from "react";
+import { deleteAssignment, setAssignments } from "./reducer";
+import * as assignmentsClient from "./client";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -18,6 +19,17 @@ export default function Assignments() {
   );
   const [deleteDialogId, setDeleteDialogId] = useState(null);
   const dispatch = useDispatch();
+  const removeAssignment = async (assignmentId: string) => {
+    await assignmentsClient.deleteAssignment(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
+  const fetchAssignments = async () => {
+    const assignments = await assignmentsClient.findAssignments(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
   return (
     <div>
       <AssignmentsControls />
@@ -159,7 +171,7 @@ export default function Assignments() {
                                     type="button"
                                     className="btn btn-danger"
                                     onClick={() => {
-                                      dispatch(deleteAssignment(assignment._id));
+                                      removeAssignment(assignment._id)
                                       setDeleteDialogId(null);
                                     }}
                                   >
